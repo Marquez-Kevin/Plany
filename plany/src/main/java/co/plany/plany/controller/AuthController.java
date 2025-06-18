@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,10 +16,7 @@ import co.plany.plany.model.Usuario;
 import co.plany.plany.service.UsuarioService;
 
 @RestController
-@RequestMapping("http://localhost:8081/api/auth")
-// ¡CRÍTICO! Cambiado a *solo* el origen de Spring Boot.
-// Si el frontend está en src/main/resources/static, este es el único origen necesario.
-@CrossOrigin(origins = "http://localhost:8081") 
+@RequestMapping("/api/auth")
 public class AuthController {
 
     @Autowired

@@ -30,23 +30,11 @@ public class SecurityConfig {
         this.customUserDetailsService = customUserDetailsService;
     }
 
-    /**
-     * @brief Define el bean para el codificador de contraseñas BCrypt.
-     * VUELVE A ACTIVARSE AQUÍ: Su lugar natural para la configuración de seguridad.
-     * @return Una instancia de BCryptPasswordEncoder.
-     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * @brief Define el bean para el AuthenticationManager.
-     * Utiliza DaoAuthenticationProvider con tu CustomUserDetailsService
-     * y el PasswordEncoder para autenticar usuarios.
-     * @param passwordEncoder El codificador de contraseñas inyectado por Spring.
-     * @return Una instancia de AuthenticationManager.
-     */
     @Bean
     public AuthenticationManager authenticationManager(PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -55,13 +43,6 @@ public class SecurityConfig {
         return new ProviderManager(authenticationProvider);
     }
 
-    /**
-     * @brief Configura la cadena de filtros de seguridad HTTP.
-     * Define las reglas de autorización, CORS, CSRF, y gestión de sesiones.
-     * @param http El objeto HttpSecurity para configurar las reglas.
-     * @return Una instancia de SecurityFilterChain.
-     * @throws Exception Si ocurre un error durante la configuración.
-     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -71,18 +52,17 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**", "/api/tareas/progress/**", "/api/tareas/today/**").permitAll()
                 .anyRequest().authenticated()
             )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+            // ===== ESTE ES EL CAMBIO MÁS IMPORTANTE =====
+            // Le decimos a Spring que cree y mantenga una sesión para el usuario.
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
+            
         return http.build();
     }
 
-    /**
-     * @brief Configura las políticas de CORS (Cross-Origin Resource Sharing).
-     * @return Una instancia de CorsConfigurationSource.
-     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:8080"));
+        configuration.setAllowedOrigins(List.of("http://127.0.0.1:5500", "http://localhost:5500"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

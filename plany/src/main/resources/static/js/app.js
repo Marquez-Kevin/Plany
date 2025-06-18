@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const registerForm = document.getElementById('registerForm');
     const showRegisterLink = document.getElementById('showRegisterLink');
     const showLoginLink = document.getElementById('showLoginLink');
-    const greetingUserName = document.getElementById('greetingUserName'); // Para mostrar el nombre del usuario
+    const greetingUserName = document.getElementById('greetingUserName');
 
     const taskListSection = document.getElementById('task-list-section');
     const addTaskBtn = document.getElementById('addTaskBtn');
@@ -25,36 +25,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const taskPrioritySelect = document.getElementById('taskPriority');
     const taskCategorySelect = document.getElementById('taskCategory');
 
-    // URL base de tu API de Spring Boot (¡Recuerda que lo cambiamos a 8081!)
-    const API_BASE_URL = 'http://localhost:8081/api'; // Actualizado el puerto
-    let currentUserId = null; // Se establecerá después de un inicio de sesión exitoso
-    let currentUserName = ''; // Se establecerá después de un inicio de sesión exitoso
+    // CORREGIDO: URL base de tu API de Spring Boot
+    const API_BASE_URL = 'http://localhost:8081/api';
+    let currentUserId = null;
+    let currentUserName = '';
 
     /**
-     * @brief Muestra un mensaje modal personalizado en lugar de alert().
-     * @param {string} message - El mensaje a mostrar.
-     * @param {string} type - 'success', 'error', 'info'.
+     * Muestra un mensaje modal personalizado.
      */
     function showModalMessage(message, type) {
         modalMessage.textContent = message;
-        modalMessage.className = `alert mt-3 alert-${type} d-block`; // Muestra el mensaje
+        modalMessage.className = `alert mt-3 alert-${type} d-block`;
         setTimeout(() => {
-            modalMessage.classList.add('d-none'); // Oculta después de 3 segundos
+            modalMessage.classList.add('d-none');
         }, 3000);
     }
 
     /**
-     * @brief Cambia la visibilidad de las secciones de la interfaz.
-     * @param {string} sectionToShow - El ID de la sección a mostrar ('auth', 'tasks', 'add-task').
+     * Cambia la visibilidad de las secciones de la interfaz.
      */
     function showSection(sectionToShow) {
         authSection.classList.add('d-none');
         taskListSection.classList.add('d-none');
-        addTaskSection.classList.add('d-none'); // Oculta siempre la sección de añadir tarea al cambiar de vista
+        addTaskSection.classList.add('d-none');
 
         if (sectionToShow === 'auth') {
             authSection.classList.remove('d-none');
-            // Por defecto, muestra la tarjeta de login al ir a la sección de auth
             loginCard.classList.remove('d-none');
             registerCard.classList.add('d-none');
         } else if (sectionToShow === 'tasks') {
@@ -65,8 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * @brief Fetches and displays tasks for the current user.
-     * @returns {void}
+     * Obtiene y muestra las tareas del usuario actual.
      */
     async function fetchAndDisplayTasks() {
         if (!currentUserId) {
@@ -81,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const tasks = await response.json();
-            taskList.innerHTML = ''; // Limpia las tareas existentes en la lista
+            taskList.innerHTML = '';
 
             if (tasks.length === 0) {
                 const li = document.createElement('li');
@@ -94,14 +89,13 @@ document.addEventListener('DOMContentLoaded', () => {
             tasks.forEach(task => {
                 const li = document.createElement('li');
                 li.className = 'list-group-item';
-                li.dataset.taskId = task.idTarea; // Guarda el ID de la tarea
+                li.dataset.taskId = task.idTarea;
 
                 const checkboxDiv = document.createElement('div');
                 checkboxDiv.className = 'form-check';
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
                 checkbox.className = 'form-check-input';
-                // Marca el checkbox si la tarea ya está completada (asumiendo ID 1 es Completada)
                 checkbox.checked = task.estado && task.estado.codEst === 1;
                 checkbox.addEventListener('change', () => toggleTaskCompletion(task.idTarea, checkbox.checked));
                 checkboxDiv.appendChild(checkbox);
@@ -126,11 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /**
-     * @brief Determines the color of the task indicator based on priority name.
-     * @param {string} priorityName - The name of the priority.
-     * @returns {string} The CSS class name for the indicator color.
-     */
     function getIndicatorColor(priorityName) {
         switch (priorityName) {
             case 'Alta': return 'red';
@@ -141,18 +130,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * @brief Updates the weekly progress display.
-     * @returns {void}
+     * Actualiza el progreso semanal.
      */
     async function updateWeeklyProgress() {
         if (!currentUserId) {
-            progressCircle.style.setProperty('--progress', `0%`);
-            progressPercentageSpan.textContent = `0%`;
+            progressCircle.style.setProperty('--progress', '0%');
+            progressPercentageSpan.textContent = '0%';
             return;
         }
 
         try {
-            const response = await fetch(`http:/localhost:8081/api/tareas/progress/${currentUserId}`);
+            const response = await fetch(`${API_BASE_URL}/tareas/progress/${currentUserId}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -166,21 +154,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * @brief Toggles the completion status of a task.
-     * @param {number} taskId - The ID of the task to toggle.
-     * @param {boolean} isCompleted - The new completion status (true if completed, false if pending).
-     * @returns {void}
+     * Cambia el estado de completado de una tarea.
      */
     async function toggleTaskCompletion(taskId, isCompleted) {
         try {
-            const endpoint = `${API_BASE_URL}/tareas/${taskId}/complete`;
-            const method = 'PUT';
-
-            const response = await fetch(endpoint, {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+            const response = await fetch(`${API_BASE_URL}/tareas/${taskId}/complete`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
             });
 
             if (!response.ok) {
@@ -190,11 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const taskElement = document.querySelector(`li[data-task-id="${taskId}"] .task-title`);
             if (taskElement) {
-                if (isCompleted) {
-                    taskElement.classList.add('task-completed');
-                } else {
-                    taskElement.classList.remove('task-completed');
-                }
+                taskElement.classList.toggle('task-completed', isCompleted);
             }
             updateWeeklyProgress();
             showModalMessage('Estado de tarea actualizado.', 'success');
@@ -202,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error toggling task completion:', error);
             const checkbox = document.querySelector(`li[data-task-id="${taskId}"] input[type="checkbox"]`);
             if (checkbox) {
-                checkbox.checked = !isCompleted; // Revertir el estado del checkbox si falla
+                checkbox.checked = !isCompleted;
             }
             showModalMessage(`No se pudo actualizar el estado de la tarea: ${error.message}.`, 'error');
         }
@@ -211,67 +187,54 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- LÓGICA DE AUTENTICACIÓN ---
 
     /**
-     * @brief Maneja el inicio de sesión del usuario.
-     * @param {string} email - El correo electrónico del usuario.
-     * @param {string} password - La contraseña del usuario.
+     * Maneja el inicio de sesión del usuario.
      */
     async function handleLogin(email, password) {
         try {
-            const response = await fetch(`http:/localhost:8081/api/auth/login`, {
+            const response = await fetch(`${API_BASE_URL}/auth/login`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ correoUsu: email, contrasena: password }),
             });
 
-            const data = await response.json();
-            if (response.ok) {
-                currentUserId = data.userId;
-                // Asumimos que el nombre del usuario se puede obtener después de iniciar sesión o se puede almacenar
-                // Por simplicidad, si el backend no lo devuelve, lo dejamos vacío o pedimos un endpoint /user/{id}
-                // Si tu backend devuelve el nombre, actualiza esta línea:
-                // currentUserName = data.nombreUsu;
-                greetingUserName.textContent = `¡HOLA, ${currentUserName.toUpperCase()}!`; // O "USUARIO" si no hay nombre
-
-                showModalMessage('¡Inicio de sesión exitoso!', 'success');
-                showSection('tasks'); // Muestra la sección de tareas
-                fetchAndDisplayTasks();
-                updateWeeklyProgress();
-            } else {
-                showModalMessage(`Error al iniciar sesión: ${data.message || 'Credenciales inválidas'}`, 'error');
+            // MEJORADO: Manejo de error antes de intentar leer JSON
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ message: 'Credenciales inválidas o error del servidor' }));
+                throw new Error(errorData.message);
             }
+
+            const data = await response.json();
+            currentUserId = data.userId;
+            // Aquí podrías hacer otra llamada para obtener el nombre del usuario si lo necesitas
+            greetingUserName.textContent = '¡HOLA!'; // Simplificado
+
+            showModalMessage('¡Inicio de sesión exitoso!', 'success');
+            showSection('tasks');
+            fetchAndDisplayTasks();
+            updateWeeklyProgress();
+
         } catch (error) {
             console.error('Error durante el inicio de sesión:', error);
-            showModalMessage('Error de conexión al intentar iniciar sesión.', 'error');
+            showModalMessage(`Error al iniciar sesión: ${error.message}`, 'error');
         }
     }
 
     /**
-     * @brief Maneja el registro de un nuevo usuario.
-     * @param {string} name - El nombre del usuario.
-     * @param {string} email - El correo electrónico del usuario.
-     * @param {string} password - La contraseña del usuario.
+     * Maneja el registro de un nuevo usuario.
      */
     async function handleRegister(name, email, password) {
-        console.log('Intentando registrar usuario:', { name, email, password }); // Log de inicio
         try {
             const response = await fetch(`${API_BASE_URL}/auth/register`, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nombreUsu: name, correoUsu: email, contrasena: password }),
             });
 
-            console.log('Respuesta del servidor para registro (raw):', response); // Log de respuesta raw
             const data = await response.json();
-            console.log('Respuesta del servidor para registro (JSON):', data); // Log de respuesta JSON
-
             if (response.ok) {
                 showModalMessage('¡Registro exitoso! Ahora puedes iniciar sesión.', 'success');
-                loginForm.reset(); // Limpia el formulario de login
-                showSection('auth'); // Vuelve a la vista de login
-                loginCard.classList.remove('d-none');
-                registerCard.classList.add('d-none');
+                loginForm.reset();
+                showSection('auth');
             } else {
                 showModalMessage(`Error al registrar: ${data.message || 'Error desconocido al registrar.'}`, 'error');
             }
@@ -283,7 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- EVENT LISTENERS ---
 
-    // Mostrar formulario de registro
     showRegisterLink.addEventListener('click', (e) => {
         e.preventDefault();
         loginCard.classList.add('d-none');
@@ -291,7 +253,6 @@ document.addEventListener('DOMContentLoaded', () => {
         registerForm.reset();
     });
 
-    // Mostrar formulario de inicio de sesión
     showLoginLink.addEventListener('click', (e) => {
         e.preventDefault();
         registerCard.classList.add('d-none');
@@ -299,7 +260,6 @@ document.addEventListener('DOMContentLoaded', () => {
         loginForm.reset();
     });
 
-    // Envío del formulario de Login
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const email = document.getElementById('loginEmail').value;
@@ -307,7 +267,6 @@ document.addEventListener('DOMContentLoaded', () => {
         handleLogin(email, password);
     });
 
-    // Envío del formulario de Registro
     registerForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const name = document.getElementById('registerName').value;
@@ -316,24 +275,21 @@ document.addEventListener('DOMContentLoaded', () => {
         handleRegister(name, email, password);
     });
 
-    // Mostrar sección de añadir tarea
     addTaskBtn.addEventListener('click', () => {
         showSection('add-task');
-        addTaskForm.reset(); // Limpia el formulario
-        // Opcional: Establecer fecha de fin por defecto a hoy + 7 días
+        addTaskForm.reset();
         const today = new Date();
         today.setDate(today.getDate() + 7);
         taskEndDateInput.value = today.toISOString().slice(0, 10);
     });
 
-    // Ocultar sección de añadir tarea y volver a tareas
     cancelAddTaskBtn.addEventListener('click', () => {
         showSection('tasks');
-        addTaskForm.reset(); // Limpia el formulario
-        fetchAndDisplayTasks(); // Refresca por si hubo cambios durante la edición
     });
 
-    // Envío del formulario de Añadir Tarea
+    /**
+     * Envío del formulario de Añadir Tarea
+     */
     addTaskForm.addEventListener('submit', async (event) => {
         event.preventDefault();
 
@@ -342,60 +298,42 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const titulo = taskNameInput.value;
-        const descripcion = taskDescriptionInput.value;
-        const fechaFin = taskEndDateInput.value; // Formato YYYY-MM-DD
-        const codPrio = parseInt(taskPrioritySelect.value);
-        const codCat = parseInt(taskCategorySelect.value);
-
-        // Validaciones básicas
-        if (!titulo || !fechaFin || isNaN(codPrio) || isNaN(codCat)) {
-            showModalMessage('Por favor, complete todos los campos obligatorios.', 'error');
-            return;
-        }
-
         const newTask = {
-            titulo: titulo,
-            descripcion: descripcion,
-            fechaCreacion: new Date().toISOString().slice(0, 10), // Fecha actual
-            fechaFin: fechaFin,
-            recordatorio: null, // Asumimos no hay recordatorio al crear la tarea
-            tipo: { codTipo: 1 }, // ID de tipo predeterminado (ej. 'Trabajo')
-            prioridad: { codPrio: codPrio },
-            categoria: { codCat: codCat },
-            estado: { codEst: 2 }, // ID de estado 'Pendiente' (asumiendo 2 es pendiente)
+            titulo: taskNameInput.value,
+            descripcion: taskDescriptionInput.value,
+            fechaCreacion: new Date().toISOString().slice(0, 10),
+            fechaFin: taskEndDateInput.value,
+            prioridad: { codPrio: parseInt(taskPrioritySelect.value) },
+            categoria: { codCat: parseInt(taskCategorySelect.value) },
+            estado: { codEst: 2 }, // Pendiente
             usuario: { idUsuario: currentUserId }
         };
 
         try {
-            const response = await fetch(`http:/localhost:8081/api/tareas`, {
+            // CORREGIDO: La URL ahora se construye correctamente y es plural
+            const response = await fetch(`${API_BASE_URL}/tareas`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newTask)
             });
 
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(`HTTP error! status: ${response.status} - ${errorData.message || response.statusText}`);
+                const errorData = await response.json().catch(() => ({ message: 'No se pudo agregar la tarea.' }));
+                throw new Error(errorData.message);
             }
 
-            const addedTask = await response.json();
-            console.log('Task added:', addedTask);
+            await response.json();
             showModalMessage('¡Tarea añadida con éxito!', 'success');
+            showSection('tasks');
+            fetchAndDisplayTasks();
+            updateWeeklyProgress();
 
-            // Después de añadir, vuelve a la lista de tareas y refresca
-            showSection('tasks'); // Muestra la sección de tareas
-            addTaskForm.reset();
-            fetchAndDisplayTasks(); // Refresca la lista
-            updateWeeklyProgress(); // Actualiza el progreso
         } catch (error) {
             console.error('Error adding task:', error);
             showModalMessage(`Error al agregar la tarea: ${error.message}.`, 'error');
         }
     });
 
-    // Inicializa la vista para mostrar la sección de autenticación al cargar la página
+    // Inicializa la vista en la sección de autenticación
     showSection('auth');
 });
