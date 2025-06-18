@@ -244,6 +244,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // ===== INICIO DE LA NUEVA FUNCIÓN =====
+    /**
+     * Obtiene los datos para los selectores (como Tipos) desde el backend.
+     */
+    async function fetchAndPopulateDropdowns() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/tipos`);
+            if (!response.ok) throw new Error('No se pudieron cargar los tipos de tarea.');
+            
+            const tipos = await response.json();
+            const taskTypeSelect = document.getElementById('taskType');
+            taskTypeSelect.innerHTML = ''; // Limpia opciones existentes
+            
+            tipos.forEach(tipo => {
+                const option = document.createElement('option');
+                option.value = tipo.codTipo;
+                option.textContent = tipo.nombreTipo;
+                taskTypeSelect.appendChild(option);
+            });
+        } catch (error) {
+            showModalMessage(error.message, 'error');
+        }
+    }
+    // ===== FIN DE LA NUEVA FUNCIÓN =====
+
     // --- EVENT LISTENERS ---
 
     showRegisterLink.addEventListener('click', (e) => {
@@ -294,6 +319,13 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
         if (!currentUserId) return;
 
+        // ===== INICIO DE LA MODIFICACIÓN =====
+
+        // 1. Obtener los valores de los nuevos campos
+        const reminderMsg = document.getElementById('taskReminderMsg').value;
+        const reminderDate = document.getElementById('taskReminderDate').value;
+
+        // 2. Construir el objeto de la nueva tarea
         const newTask = {
             titulo: taskNameInput.value,
             descripcion: taskDescriptionInput.value,
@@ -301,21 +333,31 @@ document.addEventListener('DOMContentLoaded', () => {
             fechaFin: taskEndDateInput.value,
             prioridad: { codPrio: parseInt(taskPrioritySelect.value) },
             categoria: { codCat: parseInt(taskCategorySelect.value) },
+            tipo: { codTipo: parseInt(document.getElementById('taskType').value) },
             estado: { codEst: 2 }, // Pendiente
-            usuario: { idUsuario: currentUserId }
+            usuario: { idUsuario: currentUserId },
+            recordatorio: null // Por defecto, no hay recordatorio
         };
 
+        // 3. Si se proporcionaron datos para el recordatorio, añadirlo al objeto
+        if (reminderMsg && reminderDate) {
+            newTask.recordatorio = {
+                mensaje: reminderMsg,
+                fechaHora: reminderDate // El formato 'YYYY-MM-DD' es compatible con LocalDate en el backend
+            };
+        }
+        
+        // ===== FIN DE LA MODIFICACIÓN =====
+
         try {
-            // La URL correcta debe ser: API_BASE_URL + /tareas
+            // El resto de la función no necesita cambios, solo enviará el objeto `newTask` actualizado
             const response = await fetch(`${API_BASE_URL}/tareas`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newTask)
             });
 
-            if (!response.ok) {
-                throw new Error('No se pudo agregar la tarea. Verifica que hayas iniciado sesión.');
-            }
+            if (!response.ok) throw new Error('No se pudo agregar la tarea.');
             
             showModalMessage('¡Tarea añadida con éxito!', 'success');
             showSection('tasks');
@@ -326,6 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Inicializa la vista en la sección de autenticación
+    // Inicializa la vista y carga los datos de los dropdowns
     showSection('auth');
+    fetchAndPopulateDropdowns(); // <-- LLAMA A LA NUEVA FUNCIÓN AQUÍ
 });

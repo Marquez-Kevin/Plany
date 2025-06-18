@@ -1,18 +1,21 @@
 package co.plany.plany.service;
 
 
-import co.plany.plany.model.Tarea;
-import co.plany.plany.model.Usuario;
-import co.plany.plany.model.Estado;
-import co.plany.plany.repository.TareaRepository;
-import co.plany.plany.repository.UsuarioRepository;
-import co.plany.plany.repository.EstadoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import co.plany.plany.model.Estado;
+import co.plany.plany.model.Recordatorio;
+import co.plany.plany.model.Tarea;
+import co.plany.plany.model.Usuario;
+import co.plany.plany.repository.EstadoRepository;
+import co.plany.plany.repository.RecordatorioRepository;
+import co.plany.plany.repository.TareaRepository;
+import co.plany.plany.repository.UsuarioRepository;
 
 @Service
 public class TareaService {
@@ -25,6 +28,9 @@ public class TareaService {
 
     @Autowired
     private EstadoRepository estadoRepository;
+    
+    @Autowired
+    private RecordatorioRepository recordatorioRepository;
 
     public List<Tarea> getAllTareas() {
         return tareaRepository.findAll();
@@ -38,6 +44,13 @@ public class TareaService {
         if (tarea.getFechaCreacion() == null) {
             tarea.setFechaCreacion(LocalDate.now());
         }
+
+        if (tarea.getRecordatorio() != null && tarea.getRecordatorio().getCodRecor() == null) {
+            Recordatorio nuevoRecordatorio = tarea.getRecordatorio();
+            Recordatorio recordatorioGuardado = recordatorioRepository.save(nuevoRecordatorio);
+            tarea.setRecordatorio(recordatorioGuardado);
+        }
+
         return tareaRepository.save(tarea);
     }
 
