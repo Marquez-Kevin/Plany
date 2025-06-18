@@ -53,6 +53,7 @@ public class SecurityConfig {
                     "/api/auth/**", 
                     "/api/tareas/progress/**", 
                     "/api/tareas/today/**", 
+                    "/api/tareas",
                     "/api/tipos" // <--- AÑADIR ESTA LÍNEA
                 ).permitAll()
                 .anyRequest().authenticated()
