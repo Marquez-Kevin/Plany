@@ -52,16 +52,15 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**", "/api/tareas/progress/**", "/api/tareas/today/**").permitAll()
                 .anyRequest().authenticated()
             )
-            // ===== ESTE ES EL CAMBIO MÁS IMPORTANTE =====
-            // Le decimos a Spring que cree y mantenga una sesión para el usuario.
+            // ===== ¡ASEGÚRATE DE QUE ESTA LÍNEA ESTÉ ASÍ! =====
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
-            
         return http.build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+        // Asegúrate de que el origen de tu frontend esté aquí
         configuration.setAllowedOrigins(List.of("http://127.0.0.1:5500", "http://localhost:5500"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));

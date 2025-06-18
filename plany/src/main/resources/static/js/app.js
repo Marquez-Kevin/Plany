@@ -292,11 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     addTaskForm.addEventListener('submit', async (event) => {
         event.preventDefault();
-
-        if (!currentUserId) {
-            showModalMessage('Debes iniciar sesión para añadir tareas.', 'error');
-            return;
-        }
+        if (!currentUserId) return;
 
         const newTask = {
             titulo: taskNameInput.value,
@@ -310,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            // CORREGIDO: La URL ahora se construye correctamente y es plural
+            // La URL correcta debe ser: API_BASE_URL + /tareas
             const response = await fetch(`${API_BASE_URL}/tareas`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -318,19 +314,15 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (!response.ok) {
-                const errorData = await response.json().catch(() => ({ message: 'No se pudo agregar la tarea.' }));
-                throw new Error(errorData.message);
+                throw new Error('No se pudo agregar la tarea. Verifica que hayas iniciado sesión.');
             }
-
-            await response.json();
+            
             showModalMessage('¡Tarea añadida con éxito!', 'success');
             showSection('tasks');
             fetchAndDisplayTasks();
             updateWeeklyProgress();
-
         } catch (error) {
-            console.error('Error adding task:', error);
-            showModalMessage(`Error al agregar la tarea: ${error.message}.`, 'error');
+            showModalMessage(error.message, 'error');
         }
     });
 
