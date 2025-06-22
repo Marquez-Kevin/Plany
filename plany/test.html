@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API Plany</title>
+</head>
+<body>
+    <h1>Test API Plany</h1>
+    
+    <h2>Estados</h2>
+    <button onclick="testEstados()">Obtener Estados</button>
+    <div id="estados"></div>
+    
+    <h2>Tipos</h2>
+    <button onclick="testTipos()">Obtener Tipos</button>
+    <div id="tipos"></div>
+    
+    <h2>Crear Usuario de Prueba</h2>
+    <button onclick="testCrearUsuario()">Crear Usuario</button>
+    <div id="usuario"></div>
+    
+    <h2>Crear Tarea de Prueba</h2>
+    <button onclick="testCrearTarea()">Crear Tarea</button>
+    <div id="tarea"></div>
+    
+    <h2>Obtener Tareas de Hoy</h2>
+    <button onclick="testTareasHoy()">Obtener Tareas de Hoy</button>
+    <div id="tareasHoy"></div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8081/api';
+        let userId = null;
+        let estadoPendiente = null;
+
+        async function testEstados() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/tareas/estados`);
+                const estados = await response.json();
+                document.getElementById('estados').innerHTML = '<pre>' + JSON.stringify(estados, null, 2) + '</pre>';
+                
+                // Guardar el estado pendiente
+                estadoPendiente = estados.find(e => e.nombreEstado === 'Pendiente') || estados[0];
+                console.log('Estado pendiente:', estadoPendiente);
+            } catch (error) {
+                document.getElementById('estados').innerHTML = 'Error: ' + error.message;
+            }
+        }
+
+        async function testTipos() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/tareas/tipos`);
+                const tipos = await response.json();
+                document.getElementById('tipos').innerHTML = '<pre>' + JSON.stringify(tipos, null, 2) + '</pre>';
+            } catch (error) {
+                document.getElementById('tipos').innerHTML = 'Error: ' + error.message;
+            }
+        }
+
+        async function testCrearUsuario() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        nombreUsu: 'Usuario Test',
+                        correoUsu: 'test@test.com',
+                        contrasena: '123456'
+                    })
+                });
+                const data = await response.json();
+                document.getElementById('usuario').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                
+                // Extraer el ID del usuario del mensaje
+                const match = data.message.match(/ID: (\d+)/);
+                if (match) {
+                    userId = parseInt(match[1]);
+                    console.log('Usuario creado con ID:', userId);
+                }
+            } catch (error) {
+                document.getElementById('usuario').innerHTML = 'Error: ' + error.message;
+            }
+        }
+
+        async function testCrearTarea() {
+            if (!userId || !estadoPendiente) {
+                alert('Primero crea un usuario y obtén los estados');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/tareas`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        titulo: 'Tarea de Prueba',
+                        descripcion: 'Esta es una tarea de prueba',
+                        fechaCreacion: new Date().toISOString().slice(0, 10),
+                        fechaFin: new Date().toISOString().slice(0, 10),
+                        prioridad: { codPrio: 1 },
+                        categoria: { codCat: 1 },
+                        tipo: { codTipo: 1 },
+                        estado: estadoPendiente,
+                        usuario: { idUsuario: userId },
+                        recordatorio: null
+                    })
+                });
+                const data = await response.json();
+                document.getElementById('tarea').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (error) {
+                document.getElementById('tarea').innerHTML = 'Error: ' + error.message;
+            }
+        }
+
+        async function testTareasHoy() {
+            if (!userId) {
+                alert('Primero crea un usuario');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/tareas/today/${userId}`);
+                const tareas = await response.json();
+                document.getElementById('tareasHoy').innerHTML = '<pre>' + JSON.stringify(tareas, null, 2) + '</pre>';
+            } catch (error) {
+                document.getElementById('tareasHoy').innerHTML = 'Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html> 

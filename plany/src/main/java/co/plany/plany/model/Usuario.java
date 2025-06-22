@@ -9,12 +9,14 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity // Indica que esta clase es una entidad JPA y se mapea a una tabla de BD
 @Table(name = "usuario") // Especifica el nombre de la tabla en la base de datos (minúsculas por convención en PostgreSQL)
 @Data // Anotación de Lombok para generar automáticamente getters, setters, toString(), equals(), hashCode()
 @NoArgsConstructor // Anotación de Lombok para generar un constructor sin argumentos
 @AllArgsConstructor // Anotación de Lombok para generar un constructor con todos los argumentos
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Usuario {
 
     @Id // Marca el campo como la clave primaria de la entidad

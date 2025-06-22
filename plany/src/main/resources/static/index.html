@@ -5,110 +5,215 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plany - Tu Gestor de Tareas</title>
-    <!-- Enlace a Bootstrap CSS para un diseño responsivo y rápido -->
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Enlace a tu archivo CSS personalizado para estilos específicos y mejoras visuales -->
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
-    <!-- Iconos de Font Awesome para mejorar la interfaz de usuario (ej. futuros iconos de editar/eliminar) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <div class="container mt-5">
-        <!-- Sección de Autenticación (Login/Register) -->
-        <section id="auth-section">
-            <h1 class="text-center mb-2" style="font-family: 'Inter', sans-serif; color: #333;">BIENVENIDO A PLANY</h1>
-            <p class="text-center lead mb-4" style="font-family: 'Inter', sans-serif; color: #555;">ORGANIZA TUS TAREAS
-                FÁCILMENTE</p>
+    <div class="app-container">
+        <!-- Sección de Autenticación -->
+        <section id="auth-section" class="auth-section">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <div class="logo">
+                        <i class="fas fa-tasks"></i>
+                        <h1>Plany</h1>
+                    </div>
+                    <p class="auth-subtitle">Organiza tu vida, una tarea a la vez</p>
+                </div>
 
-            <!-- Card para Login -->
-            <div class="card shadow-lg rounded-4 mb-4 border-0" id="loginCard">
-                <div class="card-body p-4">
-                    <h5 class="card-title mb-4 text-center" style="font-family: 'Inter', sans-serif; color: #444;">
-                        Iniciar Sesión</h5>
-                    <form id="loginForm">
-                        <div class="mb-3">
-                            <label for="loginEmail" class="form-label text-muted">Correo Electrónico</label>
-                            <input type="email" class="form-control rounded-pill p-3 border-light shadow-sm"
-                                id="loginEmail" required placeholder="tu.correo@example.com">
+                <!-- Login Card -->
+                <div class="auth-card" id="loginCard">
+                    <div class="card-header">
+                        <h2>Iniciar Sesión</h2>
+                        <p>Bienvenido de vuelta</p>
+                    </div>
+                    <form id="loginForm" class="auth-form">
+                        <div class="form-group">
+                            <label for="loginEmail">
+                                <i class="fas fa-envelope"></i>
+                                Correo Electrónico
+                            </label>
+                            <input type="email" id="loginEmail" required placeholder="tu.correo@example.com">
                         </div>
-                        <div class="mb-4">
-                            <label for="loginPassword" class="form-label text-muted">Contraseña</label>
-                            <input type="password" class="form-control rounded-pill p-3 border-light shadow-sm"
-                                id="loginPassword" required placeholder="********">
+                        <div class="form-group">
+                            <label for="loginPassword">
+                                <i class="fas fa-lock"></i>
+                                Contraseña
+                            </label>
+                            <input type="password" id="loginPassword" required placeholder="••••••••">
                         </div>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary rounded-pill p-3 shadow-sm">Ingresar</button>
-                        </div>
-                        <p class="text-center text-muted mt-3 mb-0">¿No tienes cuenta? <a href="#" id="showRegisterLink"
-                                class="text-decoration-none">Regístrate aquí</a></p>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Ingresar
+                        </button>
+                        <p class="auth-switch">
+                            ¿No tienes cuenta? <a href="#" id="showRegisterLink">Regístrate aquí</a>
+                        </p>
                     </form>
                 </div>
-            </div>
 
-            <!-- Card para Registro (inicialmente oculta) -->
-            <div class="card shadow-lg rounded-4 mb-4 border-0 d-none" id="registerCard">
-                <div class="card-body p-4">
-                    <h5 class="card-title mb-4 text-center" style="font-family: 'Inter', sans-serif; color: #444;">
-                        Registrarse</h5>
-                    <form id="registerForm">
-                        <div class="mb-3">
-                            <label for="registerName" class="form-label text-muted">Nombre</label>
-                            <input type="text" class="form-control rounded-pill p-3 border-light shadow-sm"
-                                id="registerName" required placeholder="Tu nombre">
+                <!-- Register Card -->
+                <div class="auth-card d-none" id="registerCard">
+                    <div class="card-header">
+                        <h2>Crear Cuenta</h2>
+                        <p>Únete a Plany</p>
+                    </div>
+                    <form id="registerForm" class="auth-form">
+                        <div class="form-group">
+                            <label for="registerName">
+                                <i class="fas fa-user"></i>
+                                Nombre
+                            </label>
+                            <input type="text" id="registerName" required placeholder="Tu nombre">
                         </div>
-                        <div class="mb-3">
-                            <label for="registerEmail" class="form-label text-muted">Correo Electrónico</label>
-                            <input type="email" class="form-control rounded-pill p-3 border-light shadow-sm"
-                                id="registerEmail" required placeholder="tu.correo@example.com">
+                        <div class="form-group">
+                            <label for="registerEmail">
+                                <i class="fas fa-envelope"></i>
+                                Correo Electrónico
+                            </label>
+                            <input type="email" id="registerEmail" required placeholder="tu.correo@example.com">
                         </div>
-                        <div class="mb-4">
-                            <label for="registerPassword" class="form-label text-muted">Contraseña</label>
-                            <input type="password" class="form-control rounded-pill p-3 border-light shadow-sm"
-                                id="registerPassword" required placeholder="********">
+                        <div class="form-group">
+                            <label for="registerPassword">
+                                <i class="fas fa-lock"></i>
+                                Contraseña
+                            </label>
+                            <input type="password" id="registerPassword" required placeholder="••••••••">
                         </div>
-                        <div class="d-grid">
-                            <button type="submit"
-                                class="btn btn-primary rounded-pill p-3 shadow-sm">Registrarme</button>
-                        </div>
-                        <p class="text-center text-muted mt-3 mb-0">¿Ya tienes cuenta? <a href="#" id="showLoginLink"
-                                class="text-decoration-none">Inicia sesión</a></p>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-user-plus"></i>
+                            Registrarme
+                        </button>
+                        <p class="auth-switch">
+                            ¿Ya tienes cuenta? <a href="#" id="showLoginLink">Inicia sesión</a>
+                        </p>
                     </form>
                 </div>
             </div>
         </section>
 
-        <!-- Sección de Vista de Tareas (inicialmente oculta) -->
-        <section id="task-list-section" class="d-none">
-            <h1 class="text-center mb-2" style="font-family: 'Inter', sans-serif; color: #333;"><span
-                    id="greetingUserName"></span></h1>
-            <p class="text-center lead mb-4" style="font-family: 'Inter', sans-serif; color: #555;">ESTAS SON TUS TAREAS
-            </p>
-            <div class="card shadow-lg rounded-4 mb-4 border-0">
-                <div class="card-body p-4">
-                    <h5 class="card-title d-flex justify-content-between align-items-center mb-3"
-                        style="font-family: 'Inter', sans-serif; color: #444;">
-                        TAREAS DE HOY
-                        <!-- Botón para añadir nueva tarea -->
-                        <button id="addTaskBtn" class="btn btn-danger rounded-circle shadow-sm"
-                            style="width: 45px; height: 45px; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; background-color: #dc3545; border-color: #dc3545;">
-                            +
+        <!-- Dashboard Section -->
+        <section id="task-list-section" class="dashboard-section d-none">
+            <div class="dashboard-container">
+                <!-- Header -->
+                <div class="dashboard-header">
+                    <div class="header-content">
+                        <h1>¡Hola! <span id="greetingUserName">Usuario</span></h1>
+                        <p>Aquí tienes un resumen de tus tareas</p>
+                    </div>
+                    <div class="header-actions">
+                        <button id="addTaskBtn" class="btn-add-task">
+                            <i class="fas fa-plus"></i>
+                            Nueva Tarea
                         </button>
-                    </h5>
-                    <!-- Lista donde se mostrarán las tareas dinámicamente -->
-                    <ul id="taskList" class="list-group list-group-flush">
-                        <!-- Las tareas se cargarán aquí mediante JavaScript -->
-                    </ul>
-                    <!-- Sección de progreso semanal -->
-                    <div class="progress-section mt-5 text-center">
-                        <h6 class="mb-3" style="font-family: 'Inter', sans-serif; color: #666;">PROGRESO SEMANAL</h6>
-                        <div class="d-flex align-items-center justify-content-center flex-column">
-                            <!-- Círculo de progreso animado -->
-                            <div class="progress-circle shadow-sm" data-progress="35">
-                                <span class="progress-percentage">35%</span>
+                        <button id="logoutBtn" class="btn-logout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Cerrar Sesión
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filtros de búsqueda -->
+                <div class="task-filters mb-3">
+                  <div class="row g-2">
+                    <div class="col-md-3">
+                      <input type="text" id="busqueda-tarea" class="form-control" placeholder="Buscar por título o descripción">
+                    </div>
+                    <div class="col-md-3">
+                      <select id="filtro-estado" class="form-select">
+                        <option value="">Todos los estados</option>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Completada">Completada</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <select id="filtro-prioridad" class="form-select">
+                        <option value="">Todas las prioridades</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <select id="filtro-categoria" class="form-select">
+                        <option value="">Todas las categorías</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-md-6">
+                      <label for="filtro-fecha-inicio" class="form-label small">Desde:</label>
+                      <input type="date" id="filtro-fecha-inicio" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                      <label for="filtro-fecha-fin" class="form-label small">Hasta:</label>
+                      <input type="date" id="filtro-fecha-fin" class="form-control">
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-md-12">
+                      <div class="d-flex gap-2 align-items-center">
+                        <button id="btn-filtrar" class="btn btn-primary" style="width: 140px; font-size: 14px; font-weight: 500; height: 38px; padding: 8px 16px; display: flex; align-items: center; justify-content: center;">
+                          <i class="fas fa-search me-1"></i>Filtrar
+                        </button>
+                        <button id="btn-limpiar-filtros" class="btn btn-secondary" style="width: 140px; font-size: 14px; font-weight: 500; height: 38px; padding: 8px 16px; display: flex; align-items: center; justify-content: center;">
+                          <i class="fas fa-times me-1"></i>Limpiar
+                        </button>
+                        <button id="btn-hoy" class="btn" style="width: 140px; font-size: 14px; font-weight: 500; height: 38px; padding: 8px 16px; display: flex; align-items: center; justify-content: center; background-color: #8B5CF6; border-color: #8B5CF6; color: white;">
+                          <i class="fas fa-calendar-day me-1"></i>Hoy
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="dashboard-content">
+                    <!-- Tasks Column -->
+                    <div class="tasks-column">
+                        <div class="tasks-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-list-check"></i> Mis Tareas</h3>
+                                <div class="task-stats">
+                                    <span class="stat-item">
+                                        <i class="fas fa-clock"></i>
+                                        <span id="pendingTasks">0</span> pendientes
+                                    </span>
+                                </div>
                             </div>
-                            <div class="progress-days mt-3 text-muted" style="font-size: 0.9em;">
-                                L M M J V S D
+                            <div class="tasks-list" id="taskList">
+                                <!-- Tasks will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Column -->
+                    <div class="progress-column">
+                        <div class="progress-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-chart-line"></i> Progreso Semanal</h3>
+                            </div>
+                            <div class="progress-content">
+                                <div class="progress-circle" data-progress="35">
+                                    <div class="progress-inner">
+                                        <span class="progress-percentage">35%</span>
+                                        <span class="progress-label">Completado</span>
+                                    </div>
+                                </div>
+                                <div class="progress-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-number" id="completedTasks">0</span>
+                                        <span class="stat-label">Completadas</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number" id="totalTasks">0</span>
+                                        <span class="stat-label">Total</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -116,87 +221,228 @@
             </div>
         </section>
 
-        <!-- Sección para Añadir Tarea (inicialmente oculta) -->
-        <section id="addTaskSection" class="d-none">
-            <div class="card shadow-lg rounded-4 border-0">
-                <div class="card-body p-4">
-                    <h5 class="card-title mb-4" style="font-family: 'Inter', sans-serif; color: #444;">Agregar tarea
-                    </h5>
-                    <form id="addTaskForm">
-                        <div class="mb-3">
-                            <label for="taskName" class="form-label text-muted">Nombre</label>
-                            <input type="text" class="form-control rounded-pill p-3 border-light shadow-sm"
-                                id="taskName" required placeholder="Título de la tarea">
+        <!-- Add Task Section -->
+        <section id="addTaskSection" class="add-task-section d-none">
+            <div class="add-task-container">
+                <div class="add-task-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-plus-circle"></i> Nueva Tarea</h2>
+                        <p>Organiza tu próxima actividad</p>
+                    </div>
+                    <form id="addTaskForm" class="add-task-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="taskName">
+                                    <i class="fas fa-tag"></i>
+                                    Título de la Tarea
+                                </label>
+                                <input type="text" id="taskName" required placeholder="¿Qué necesitas hacer?">
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="taskDescription" class="form-label text-muted">Descripción</label>
-                            <textarea class="form-control rounded-4 p-3 border-light shadow-sm" id="taskDescription"
-                                rows="3" placeholder="Descripción detallada de la tarea"></textarea>
-                        </div>
-                        <!-- Campos adicionales para la tarea (fecha, prioridad, etc.) -->
-                        <div class="mb-3">
-                            <label for="taskEndDate" class="form-label text-muted">Fecha de Fin</label>
-                            <input type="date" class="form-control rounded-pill p-3 border-light shadow-sm"
-                                id="taskEndDate" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="taskReminderMsg" class="form-label text-muted">Mensaje del Recordatorio
-                                (Opcional)</label>
-                            <input type="text" class="form-control rounded-pill p-3 border-light shadow-sm"
-                                id="taskReminderMsg" placeholder="Ej: Enviar el reporte semanal">
-                        </div>
-                        <div class="mb-3">
-                            <label for="taskReminderDate" class="form-label text-muted">Fecha del Recordatorio
-                                (Opcional)</label>
-                            <input type="date" class="form-control rounded-pill p-3 border-light shadow-sm"
-                                id="taskReminderDate">
-                        </div>
-                        <div class="mb-3">
-                            <label for="taskPriority" class="form-label text-muted">Prioridad</label>
-                            <select class="form-select rounded-pill p-3 border-light shadow-sm" id="taskPriority"
-                                required>
-                                <!-- Opciones cargadas dinámicamente por JS o precargadas -->
-                                <option value="">Seleccione una prioridad</option>
-                                <option value="1">Alta</option>
-                                <option value="2">Media</option>
-                                <option value="3">Baja</option>
-                            </select>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="taskDescription">
+                                    <i class="fas fa-align-left"></i>
+                                    Descripción
+                                </label>
+                                <textarea id="taskDescription" rows="3" placeholder="Describe los detalles de tu tarea..."></textarea>
+                            </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="taskType" class="form-label">Tipo</label>
-                            <select class="form-select" id="taskType" required>
-                            </select>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="taskEndDate">
+                                    <i class="fas fa-calendar"></i>
+                                    Fecha de Finalización
+                                </label>
+                                <input type="date" id="taskEndDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="taskPriority">
+                                    <i class="fas fa-flag"></i>
+                                    Prioridad
+                                </label>
+                                <select id="taskPriority" required>
+                                    <option value="">Selecciona prioridad</option>
+                                    <option value="1">Alta</option>
+                                    <option value="2">Media</option>
+                                    <option value="3">Baja</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="taskCategory" class="form-label text-muted">Categoría</label>
-                            <select class="form-select rounded-pill p-3 border-light shadow-sm" id="taskCategory"
-                                required>
-                                <option value="">Seleccione una categoría</option>
-                                <option value="1">Laboral</option>
-                                <option value="2">Colegio</option>
-                                <option value="3">Universidad</option>
-                                <option value="4">Personal</option>
-                            </select>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="taskCategory">
+                                    <i class="fas fa-folder"></i>
+                                    Categoría
+                                </label>
+                                <select id="taskCategory" required>
+                                    <option value="">Selecciona categoría</option>
+                                    <option value="1">Laboral</option>
+                                    <option value="2">Colegio</option>
+                                    <option value="3">Universidad</option>
+                                    <option value="4">Personal</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="taskType">
+                                    <i class="fas fa-tasks"></i>
+                                    Tipo
+                                </label>
+                                <select id="taskType" required>
+                                    <option value="">Selecciona tipo</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="d-flex justify-content-end mt-4">
-                            <button type="button" id="cancelAddTaskBtn"
-                                class="btn btn-outline-secondary rounded-pill me-3 px-4 shadow-sm">Cancelar</button>
-                            <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">Guardar</button>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="taskReminderMsg">
+                                    <i class="fas fa-bell"></i>
+                                    Mensaje de Recordatorio
+                                </label>
+                                <input type="text" id="taskReminderMsg" placeholder="Ej: Enviar el reporte semanal">
+                            </div>
+                            <div class="form-group">
+                                <label for="taskReminderDate">
+                                    <i class="fas fa-clock"></i>
+                                    Fecha del Recordatorio
+                                </label>
+                                <input type="date" id="taskReminderDate">
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" id="cancelAddTaskBtn" class="btn-secondary">
+                                <i class="fas fa-times"></i>
+                                Cancelar
+                            </button>
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-save"></i>
+                                Crear Tarea
+                            </button>
                         </div>
                     </form>
                 </div>
             </div>
         </section>
 
-        <!-- Contenedor para mensajes modales (para reemplazar alerts) -->
-        <div id="modalMessage" class="alert d-none mt-3" role="alert"></div>
+        <!-- Edit Task Section -->
+        <section id="editTaskSection" class="add-task-section d-none">
+            <div class="add-task-container">
+                <div class="add-task-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-edit"></i> Editar Tarea</h2>
+                        <p>Modifica los detalles de tu tarea</p>
+                    </div>
+                    <form id="editTaskForm" class="add-task-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editTaskName">
+                                    <i class="fas fa-tag"></i>
+                                    Título de la Tarea
+                                </label>
+                                <input type="text" id="editTaskName" required placeholder="¿Qué necesitas hacer?">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editTaskDescription">
+                                    <i class="fas fa-align-left"></i>
+                                    Descripción
+                                </label>
+                                <textarea id="editTaskDescription" rows="3" placeholder="Describe los detalles de tu tarea..."></textarea>
+                            </div>
+                        </div>
 
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editTaskEndDate">
+                                    <i class="fas fa-calendar"></i>
+                                    Fecha de Finalización
+                                </label>
+                                <input type="date" id="editTaskEndDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editTaskPriority">
+                                    <i class="fas fa-flag"></i>
+                                    Prioridad
+                                </label>
+                                <select id="editTaskPriority" required>
+                                    <option value="">Selecciona prioridad</option>
+                                    <option value="1">Alta</option>
+                                    <option value="2">Media</option>
+                                    <option value="3">Baja</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editTaskCategory">
+                                    <i class="fas fa-folder"></i>
+                                    Categoría
+                                </label>
+                                <select id="editTaskCategory" required>
+                                    <option value="">Selecciona categoría</option>
+                                    <option value="1">Laboral</option>
+                                    <option value="2">Colegio</option>
+                                    <option value="3">Universidad</option>
+                                    <option value="4">Personal</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="editTaskType">
+                                    <i class="fas fa-tasks"></i>
+                                    Tipo
+                                </label>
+                                <select id="editTaskType" required>
+                                    <option value="">Selecciona tipo</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editTaskReminderMsg">
+                                    <i class="fas fa-bell"></i>
+                                    Mensaje de Recordatorio
+                                </label>
+                                <input type="text" id="editTaskReminderMsg" placeholder="Ej: Enviar el reporte semanal">
+                            </div>
+                            <div class="form-group">
+                                <label for="editTaskReminderDate">
+                                    <i class="fas fa-clock"></i>
+                                    Fecha del Recordatorio
+                                </label>
+                                <input type="date" id="editTaskReminderDate">
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" id="cancelEditTaskBtn" class="btn-secondary">
+                                <i class="fas fa-times"></i>
+                                Cancelar
+                            </button>
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-save"></i>
+                                Actualizar Tarea
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal Message -->
+        <div id="modalMessage" class="modal-message d-none"></div>
     </div>
 
-    <!-- Script de Bootstrap Bundle con Popper para funcionalidades JS de Bootstrap -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Tu script JavaScript personalizado -->
     <script src="js/app.js"></script>
 </body>
 

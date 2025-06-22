@@ -73,7 +73,11 @@ public class AuthController {
             Usuario usuario = usuarioOptional.get();
             System.out.println("Backend: Inicio de sesión exitoso para usuario ID: " + usuario.getIdUsuario()); // Log de éxito
             return new ResponseEntity<>(
-                Map.of("message", "Inicio de sesión exitoso", "userId", usuario.getIdUsuario()),
+                Map.of(
+                    "message", "Inicio de sesión exitoso", 
+                    "userId", usuario.getIdUsuario(),
+                    "nombreUsu", usuario.getNombreUsu()
+                ),
                 HttpStatus.OK
             );
         } else {

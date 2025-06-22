@@ -15,6 +15,9 @@ public interface TareaRepository extends JpaRepository<Tarea, Integer> {
     // Método para encontrar tareas por un usuario y por un estado específico
     List<Tarea> findByUsuarioAndEstado(Usuario usuario, Estado estado);
 
+    // Método para encontrar todas las tareas de un usuario
+    List<Tarea> findByUsuario(Usuario usuario);
+
     /**
      * @brief Encuentra tareas para un usuario y un estado específicos,
      * cuya fecha de fin es menor o igual a la fecha proporcionada.

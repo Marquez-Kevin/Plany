@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.LocalDate; // Importa LocalDate para manejar fechas
 
 @Entity
@@ -11,6 +12,7 @@ import java.time.LocalDate; // Importa LocalDate para manejar fechas
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Tarea {
 
     @Id

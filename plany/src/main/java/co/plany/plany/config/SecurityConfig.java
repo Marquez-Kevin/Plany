@@ -49,14 +49,7 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/api/auth/**", 
-                    "/api/tareas/progress/**", 
-                    "/api/tareas/today/**", 
-                    "/api/tareas",
-                    "/api/tipos" // <--- AÑADIR ESTA LÍNEA
-                ).permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().permitAll() // TEMPORAL: Permitir todo el acceso
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
         return http.build();
