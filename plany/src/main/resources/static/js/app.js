@@ -40,7 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const taskCategorySelect = document.getElementById('taskCategory');
 
     // API Configuration
-    const API_BASE_URL = 'http://localhost:8081/api';
+    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+        ? 'http://localhost:8081/api' 
+        : `${window.location.protocol}//${window.location.host}/api`;
     let currentUserId = null;
     let currentUserName = '';
 

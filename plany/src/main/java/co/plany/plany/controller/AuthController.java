@@ -4,23 +4,24 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import co.plany.plany.model.Usuario;
 import co.plany.plany.service.UsuarioService;
 
+import java.util.HashMap;
+
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = "*")
 public class AuthController {
 
-    @Autowired
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
+
+    public AuthController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
 
     /**
      * @brief Endpoint para registrar un nuevo usuario.
@@ -29,21 +30,26 @@ public class AuthController {
      * @return ResponseEntity con el usuario registrado o un mensaje de error.
      */
     @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> registerUser(@RequestBody Usuario usuario) {
-        System.out.println("Backend: Solicitud de registro recibida para correo: " + usuario.getCorreoUsu()); // Log de entrada
+    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         try {
-            Usuario nuevoUsuario = usuarioService.registrarUsuario(usuario);
-            System.out.println("Backend: Usuario registrado exitosamente con ID: " + nuevoUsuario.getIdUsuario()); // Log de éxito
-            return new ResponseEntity<>(
-                Collections.singletonMap("message", "Usuario registrado exitosamente con ID: " + nuevoUsuario.getIdUsuario()),
-                HttpStatus.CREATED
-            );
-        } catch (RuntimeException e) {
-            System.err.println("Backend: Error al registrar usuario: " + e.getMessage()); // Log de error
-            return new ResponseEntity<>(
-                Collections.singletonMap("message", e.getMessage()),
-                HttpStatus.BAD_REQUEST
-            );
+            Usuario nuevoUsuario = new Usuario();
+            nuevoUsuario.setNombreUsu(registerRequest.getName());
+            nuevoUsuario.setCorreoUsu(registerRequest.getEmail());
+            nuevoUsuario.setContrasena(registerRequest.getPassword());
+            
+            Usuario usuarioGuardado = usuarioService.registrarUsuario(nuevoUsuario);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Usuario registrado exitosamente");
+            response.put("userId", usuarioGuardado.getIdUsuario());
+            response.put("userName", usuarioGuardado.getNombreUsu());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "Error al registrar usuario: " + e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
@@ -54,38 +60,61 @@ public class AuthController {
      * @return ResponseEntity con el ID del usuario si el inicio de sesión es exitoso, o un mensaje de error.
      */
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> loginUser(@RequestBody Map<String, String> credentials) {
-        String correoUsu = credentials.get("correoUsu");
-        String contrasena = credentials.get("contrasena");
-
-        System.out.println("Backend: Solicitud de inicio de sesión recibida para correo: " + correoUsu); // Log de entrada
-
-        if (correoUsu == null || contrasena == null) {
-            System.err.println("Backend: Correo o contraseña faltantes en la solicitud de login."); // Log de error
-            return new ResponseEntity<>(
-                Collections.singletonMap("message", "Correo y contraseña son requeridos."),
-                HttpStatus.BAD_REQUEST
-            );
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        try {
+            Optional<Usuario> usuarioOptional = usuarioService.iniciarSesion(loginRequest.getEmail(), loginRequest.getPassword());
+            if (usuarioOptional.isPresent()) {
+                Usuario usuario = usuarioOptional.get();
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", true);
+                response.put("message", "Login exitoso");
+                response.put("userId", usuario.getIdUsuario());
+                response.put("userName", usuario.getNombreUsu());
+                return ResponseEntity.ok(response);
+            } else {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", false);
+                response.put("message", "Credenciales inválidas");
+                return ResponseEntity.badRequest().body(response);
+            }
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "Error al iniciar sesión: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
         }
+    }
 
-        Optional<Usuario> usuarioOptional = usuarioService.iniciarSesion(correoUsu, contrasena);
-        if (usuarioOptional.isPresent()) {
-            Usuario usuario = usuarioOptional.get();
-            System.out.println("Backend: Inicio de sesión exitoso para usuario ID: " + usuario.getIdUsuario()); // Log de éxito
-            return new ResponseEntity<>(
-                Map.of(
-                    "message", "Inicio de sesión exitoso", 
-                    "userId", usuario.getIdUsuario(),
-                    "nombreUsu", usuario.getNombreUsu()
-                ),
-                HttpStatus.OK
-            );
-        } else {
-            System.err.println("Backend: Credenciales de inicio de sesión inválidas para correo: " + correoUsu); // Log de error
-            return new ResponseEntity<>(
-                Collections.singletonMap("message", "Credenciales inválidas."),
-                HttpStatus.UNAUTHORIZED
-            );
-        }
+    @GetMapping("/health")
+    public ResponseEntity<Map<String, Object>> healthCheck() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "UP");
+        response.put("message", "Plany API is running");
+        response.put("timestamp", System.currentTimeMillis());
+        return ResponseEntity.ok(response);
+    }
+
+    // Clases internas para las requests
+    public static class LoginRequest {
+        private String email;
+        private String password;
+
+        public String getEmail() { return email; }
+        public void setEmail(String email) { this.email = email; }
+        public String getPassword() { return password; }
+        public void setPassword(String password) { this.password = password; }
+    }
+
+    public static class RegisterRequest {
+        private String name;
+        private String email;
+        private String password;
+
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+        public String getEmail() { return email; }
+        public void setEmail(String email) { this.email = email; }
+        public String getPassword() { return password; }
+        public void setPassword(String password) { this.password = password; }
     }
 }
