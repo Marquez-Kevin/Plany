@@ -1,5 +1,5 @@
 # Simple Dockerfile for Plany - Spring Boot Application
-FROM amazoncorretto:17-alpine
+FROM amazoncorretto:21-alpine
 
 # Set working directory
 WORKDIR /app

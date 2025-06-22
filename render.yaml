@@ -12,6 +12,8 @@ services:
         value: 8081
       - key: SPRING_PROFILES_ACTIVE
         value: prod
+      - key: JAVA_VERSION
+        value: 21
       - key: DATABASE_URL
         value: postgresql://postgres:pAiBYcudZpLsxtirnCwPmiHzSPTVhlsn@yamanote.proxy.rlwy.net:40166/railway
       - key: DB_USERNAME
