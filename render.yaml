@@ -4,8 +4,9 @@ services:
     env: docker
     region: oregon
     plan: free
-    buildCommand: chmod +x build.sh && ./build.sh
-    startCommand: java -jar plany.jar
+    dockerfilePath: ./Dockerfile.simple
+    buildCommand: cd plany && mvn clean package -DskipTests
+    startCommand: java -jar plany/target/plany-0.0.1-SNAPSHOT.jar
     envVars:
       - key: PORT
         value: 8081
