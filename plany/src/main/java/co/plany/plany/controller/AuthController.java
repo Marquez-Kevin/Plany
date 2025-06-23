@@ -94,6 +94,15 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/")
+    public ResponseEntity<Map<String, Object>> rootHealthCheck() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "UP");
+        response.put("message", "Plany API is running");
+        response.put("timestamp", System.currentTimeMillis());
+        return ResponseEntity.ok(response);
+    }
+
     // Clases internas para las requests
     public static class LoginRequest {
         private String email;

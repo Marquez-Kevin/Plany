@@ -40,9 +40,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const taskCategorySelect = document.getElementById('taskCategory');
 
     // API Configuration
-    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-        ? 'http://localhost:8081/api' 
-        : `${window.location.protocol}//${window.location.host}/api`;
+    // Usar la configuración centralizada
+    const API_BASE_URL = window.API_CONFIG ? window.API_CONFIG.currentUrl : 
+        (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? 'http://localhost:8080/api' 
+            : `${window.location.protocol}//${window.location.host}/api`);
+    
+    // Para desarrollo local usa localhost:8080, para producción usa la URL del servidor
+    // const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    //     ? 'http://localhost:8080/api' 
+    //     : `${window.location.protocol}//${window.location.host}/api`;
+    
+    // Alternativa: Si necesitas una URL específica para producción, descomenta la línea siguiente:
+    // const API_BASE_URL = 'https://tu-dominio-backend.com/api';
     let currentUserId = null;
     let currentUserName = '';
 

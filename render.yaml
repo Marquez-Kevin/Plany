@@ -6,19 +6,61 @@ services:
     plan: free
     dockerfilePath: ./Dockerfile.simple
     buildCommand: cd plany && mvn clean package -DskipTests
-    startCommand: java -jar plany/target/plany-0.0.1-SNAPSHOT.jar
+    startCommand: java -Dspring.profiles.active=prod -jar plany/target/plany-0.0.1-SNAPSHOT.jar
     envVars:
+      # Puerto de la aplicación (Render lo maneja automáticamente)
       - key: PORT
         value: 8081
+      
+      # Perfil de Spring Boot
       - key: SPRING_PROFILES_ACTIVE
         value: prod
+      
+      # Configuración de Java
       - key: JAVA_VERSION
         value: 21
+      - key: JAVA_OPTS
+        value: "-Xmx512m -Xms256m"
+      
+      # Configuración de la base de datos Railway
       - key: DATABASE_URL
         value: postgresql://postgres:pAiBYcudZpLsxtirnCwPmiHzSPTVhlsn@yamanote.proxy.rlwy.net:40166/railway
       - key: DB_USERNAME
         value: postgres
       - key: DB_PASSWORD
         value: pAiBYcudZpLsxtirnCwPmiHzSPTVhlsn
+      
+      # Configuración de Spring Boot
+      - key: SPRING_DATASOURCE_URL
+        value: postgresql://postgres:pAiBYcudZpLsxtirnCwPmiHzSPTVhlsn@yamanote.proxy.rlwy.net:40166/railway
+      - key: SPRING_DATASOURCE_USERNAME
+        value: postgres
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: pAiBYcudZpLsxtirnCwPmiHzSPTVhlsn
+      - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+        value: org.postgresql.Driver
+      - key: SPRING_JPA_DATABASE_PLATFORM
+        value: org.hibernate.dialect.PostgreSQLDialect
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      - key: SPRING_JPA_SHOW_SQL
+        value: false
+      
+      # Configuración de logging
+      - key: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB
+        value: INFO
+      - key: LOGGING_LEVEL_ORG_HIBERNATE_SQL
+        value: WARN
+      - key: LOGGING_LEVEL_COM_ZAXXER_HIKARI
+        value: INFO
+      
+      # Configuración de CORS
+      - key: SPRING_WEB_CORS_ALLOWED_ORIGINS
+        value: "*"
+      - key: SPRING_WEB_CORS_ALLOWED_METHODS
+        value: "GET,POST,PUT,DELETE,OPTIONS"
+      - key: SPRING_WEB_CORS_ALLOWED_HEADERS
+        value: "*"
+    
     healthCheckPath: /
     autoDeploy: true 
