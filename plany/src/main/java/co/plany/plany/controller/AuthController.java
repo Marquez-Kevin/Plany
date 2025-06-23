@@ -167,6 +167,20 @@ public class AuthController {
         }
     }
 
+    /**
+     * @brief Endpoint de debug para ver qué datos se reciben en el registro.
+     * @return ResponseEntity con los datos recibidos.
+     */
+    @PostMapping("/debug-register")
+    public ResponseEntity<Map<String, Object>> debugRegister(@RequestBody Map<String, Object> requestData) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", "Datos recibidos en debug");
+        response.put("receivedData", requestData);
+        response.put("timestamp", System.currentTimeMillis());
+        return ResponseEntity.ok(response);
+    }
+
     // Clases internas para las requests
     public static class LoginRequest {
         private String email;

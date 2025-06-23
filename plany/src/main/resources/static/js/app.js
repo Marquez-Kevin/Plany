@@ -491,16 +491,22 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     async function handleRegister(name, email, password) {
         try {
+            console.log('Intentando registrar usuario:', { name, email, password });
+            
             const response = await fetch(`${API_BASE_URL}/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nombreUsu: name, correoUsu: email, contrasena: password }),
+                body: JSON.stringify({ name: name, email: email, password: password }),
             });
 
+            console.log('Respuesta del servidor:', response.status, response.statusText);
+            
             const data = await response.json();
+            console.log('Datos de respuesta:', data);
+            
             if (response.ok) {
                 showModalMessage('¡Registro exitoso! Ahora puedes iniciar sesión.', 'success');
-                loginForm.reset();
+                registerForm.reset();
                 showSection('auth');
             } else {
                 showModalMessage(`Error al registrar: ${data.message || 'Error desconocido al registrar.'}`, 'error');
