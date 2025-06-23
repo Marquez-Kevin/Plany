@@ -22,17 +22,17 @@ services:
       - key: JAVA_OPTS
         value: "-Xmx512m -Xms256m"
       
-      # Configuración de la base de datos Railway
+      # Configuración de la base de datos Railway (formato JDBC correcto)
       - key: DATABASE_URL
-        value: postgresql://postgres:pAiBYcudZpLsxtirnCwPmiHzSPTVhlsn@yamanote.proxy.rlwy.net:40166/railway
+        value: jdbc:postgresql://yamanote.proxy.rlwy.net:40166/railway
       - key: DB_USERNAME
         value: postgres
       - key: DB_PASSWORD
         value: pAiBYcudZpLsxtirnCwPmiHzSPTVhlsn
       
-      # Configuración de Spring Boot
+      # Configuración de Spring Boot (formato JDBC correcto)
       - key: SPRING_DATASOURCE_URL
-        value: postgresql://postgres:pAiBYcudZpLsxtirnCwPmiHzSPTVhlsn@yamanote.proxy.rlwy.net:40166/railway
+        value: jdbc:postgresql://yamanote.proxy.rlwy.net:40166/railway
       - key: SPRING_DATASOURCE_USERNAME
         value: postgres
       - key: SPRING_DATASOURCE_PASSWORD

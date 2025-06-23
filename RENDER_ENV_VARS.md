@@ -17,14 +17,14 @@
 ### Base de Datos Railway
 | Variable | Valor | Descripción |
 |----------|-------|-------------|
-| `DATABASE_URL` | `postgresql://postgres:pAiBYcudZpLsxtirnCwPmiHzSPTVhlsn@yamanote.proxy.rlwy.net:40166/railway` | URL completa de conexión a PostgreSQL |
+| `DATABASE_URL` | `jdbc:postgresql://yamanote.proxy.rlwy.net:40166/railway` | URL completa de conexión a PostgreSQL (formato JDBC) |
 | `DB_USERNAME` | `postgres` | Usuario de la base de datos |
 | `DB_PASSWORD` | `pAiBYcudZpLsxtirnCwPmiHzSPTVhlsn` | Contraseña de la base de datos |
 
 ### Configuración de Spring Boot
 | Variable | Valor | Descripción |
 |----------|-------|-------------|
-| `SPRING_DATASOURCE_URL` | `postgresql://postgres:pAiBYcudZpLsxtirnCwPmiHzSPTVhlsn@yamanote.proxy.rlwy.net:40166/railway` | URL de la base de datos |
+| `SPRING_DATASOURCE_URL` | `jdbc:postgresql://yamanote.proxy.rlwy.net:40166/railway` | URL de la base de datos (formato JDBC) |
 | `SPRING_DATASOURCE_USERNAME` | `postgres` | Usuario de la base de datos |
 | `SPRING_DATASOURCE_PASSWORD` | `pAiBYcudZpLsxtirnCwPmiHzSPTVhlsn` | Contraseña de la base de datos |
 | `SPRING_DATASOURCE_DRIVER_CLASS_NAME` | `org.postgresql.Driver` | Driver de PostgreSQL |
@@ -63,15 +63,17 @@
 
 ## Notas Importantes
 
-1. **Seguridad**: Las credenciales de la base de datos están hardcodeadas en este archivo. En un entorno de producción real, deberías usar variables de entorno secretas.
+1. **Formato JDBC**: Las URLs de la base de datos DEBEN usar el formato `jdbc:postgresql://` no `postgresql://`
 
-2. **Puerto**: Render automáticamente mapea el puerto interno (8081) al puerto externo (80/443).
+2. **Seguridad**: Las credenciales de la base de datos están hardcodeadas en este archivo. En un entorno de producción real, deberías usar variables de entorno secretas.
 
-3. **Health Check**: La aplicación expone un endpoint de health check en `/` para que Render pueda verificar el estado.
+3. **Puerto**: Render automáticamente mapea el puerto interno (8081) al puerto externo (80/443).
 
-4. **CORS**: La configuración permite todas las orígenes (`*`). En producción, deberías especificar solo los dominios permitidos.
+4. **Health Check**: La aplicación expone un endpoint de health check en `/` para que Render pueda verificar el estado.
 
-5. **Memoria**: La aplicación está configurada para usar máximo 512MB de RAM. Ajusta según tus necesidades.
+5. **CORS**: La configuración permite todas las orígenes (`*`). En producción, deberías especificar solo los dominios permitidos.
+
+6. **Memoria**: La aplicación está configurada para usar máximo 512MB de RAM. Ajusta según tus necesidades.
 
 ## Troubleshooting
 
@@ -81,6 +83,7 @@
 - Asegúrate de que la base de datos Railway esté activa
 
 ### Si hay errores de conexión a la base de datos:
+- **IMPORTANTE**: Verifica que las URLs usen el formato `jdbc:postgresql://` no `postgresql://`
 - Verifica que las credenciales de Railway sean correctas
 - Asegúrate de que la base de datos esté accesible desde Render
 - Revisa los logs de conexión en Railway
