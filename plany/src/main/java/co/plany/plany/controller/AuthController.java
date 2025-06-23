@@ -175,9 +175,44 @@ public class AuthController {
     public ResponseEntity<Map<String, Object>> debugRegister(@RequestBody Map<String, Object> requestData) {
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
-        response.put("message", "Datos recibidos en debug");
+        response.put("message", "Datos recibidos en debug de registro");
         response.put("receivedData", requestData);
         response.put("timestamp", System.currentTimeMillis());
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * @brief Endpoint de debug para ver qué datos se reciben en el login.
+     * @return ResponseEntity con los datos recibidos.
+     */
+    @PostMapping("/debug-login")
+    public ResponseEntity<Map<String, Object>> debugLogin(@RequestBody Map<String, Object> requestData) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", "Datos recibidos en debug de login");
+        response.put("receivedData", requestData);
+        response.put("timestamp", System.currentTimeMillis());
+        
+        // Intentar hacer login real para debug
+        try {
+            String email = (String) requestData.get("email");
+            String password = (String) requestData.get("password");
+            
+            if (email != null && password != null) {
+                Optional<Usuario> usuarioOptional = usuarioService.iniciarSesion(email, password);
+                response.put("loginAttempt", usuarioOptional.isPresent());
+                if (usuarioOptional.isPresent()) {
+                    response.put("userFound", true);
+                    response.put("userId", usuarioOptional.get().getIdUsuario());
+                    response.put("userName", usuarioOptional.get().getNombreUsu());
+                } else {
+                    response.put("userFound", false);
+                }
+            }
+        } catch (Exception e) {
+            response.put("loginError", e.getMessage());
+        }
+        
         return ResponseEntity.ok(response);
     }
 

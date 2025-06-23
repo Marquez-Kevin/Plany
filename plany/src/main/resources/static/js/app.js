@@ -454,11 +454,15 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     async function handleLogin(email, password) {
         try {
+            console.log('Intentando iniciar sesión:', { email, password });
+            
             const response = await fetch(`${API_BASE_URL}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ correoUsu: email, contrasena: password }),
+                body: JSON.stringify({ email: email, password: password }),
             });
+
+            console.log('Respuesta del servidor:', response.status, response.statusText);
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({ message: 'Credenciales inválidas o error del servidor' }));
@@ -466,8 +470,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const data = await response.json();
+            console.log('Datos de respuesta del login:', data);
+            
             currentUserId = data.userId;
-            currentUserName = data.nombreUsu || 'Usuario';
+            currentUserName = data.userName || 'Usuario';
             
             // Update the greeting with the new user's name
             greetingUserName.textContent = currentUserName;
