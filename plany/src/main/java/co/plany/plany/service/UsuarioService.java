@@ -58,4 +58,21 @@ public class UsuarioService {
     public Optional<Usuario> findByCorreoUsu(String correoUsu) {
         return usuarioRepository.findByCorreoUsu(correoUsu);
     }
+
+    /**
+     * @brief Obtiene el número total de usuarios registrados.
+     * @return El número de usuarios en la base de datos.
+     */
+    public long getUsersCount() {
+        return usuarioRepository.count();
+    }
+
+    /**
+     * @brief Busca un usuario por su correo electrónico.
+     * @param email El correo electrónico del usuario.
+     * @return Optional con el usuario si se encuentra.
+     */
+    public Optional<Usuario> findByEmail(String email) {
+        return usuarioRepository.findByCorreoUsu(email);
+    }
 }

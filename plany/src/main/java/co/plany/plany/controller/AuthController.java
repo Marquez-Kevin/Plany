@@ -103,6 +103,70 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * @brief Endpoint para verificar si hay usuarios en la base de datos.
+     * @return ResponseEntity con información sobre los usuarios existentes.
+     */
+    @GetMapping("/users/count")
+    public ResponseEntity<Map<String, Object>> getUsersCount() {
+        try {
+            long count = usuarioService.getUsersCount();
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("usersCount", count);
+            response.put("message", "Hay " + count + " usuarios registrados");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "Error al contar usuarios: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+    /**
+     * @brief Endpoint para crear un usuario de prueba.
+     * @return ResponseEntity con el usuario creado.
+     */
+    @PostMapping("/create-test-user")
+    public ResponseEntity<Map<String, Object>> createTestUser() {
+        try {
+            // Verificar si ya existe un usuario de prueba
+            Optional<Usuario> existingUser = usuarioService.findByEmail("test@plany.com");
+            if (existingUser.isPresent()) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", true);
+                response.put("message", "Usuario de prueba ya existe");
+                response.put("userId", existingUser.get().getIdUsuario());
+                response.put("userName", existingUser.get().getNombreUsu());
+                response.put("email", existingUser.get().getCorreoUsu());
+                return ResponseEntity.ok(response);
+            }
+
+            // Crear usuario de prueba
+            Usuario testUser = new Usuario();
+            testUser.setNombreUsu("Usuario de Prueba");
+            testUser.setCorreoUsu("test@plany.com");
+            testUser.setContrasena("123456");
+            
+            Usuario usuarioGuardado = usuarioService.registrarUsuario(testUser);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Usuario de prueba creado exitosamente");
+            response.put("userId", usuarioGuardado.getIdUsuario());
+            response.put("userName", usuarioGuardado.getNombreUsu());
+            response.put("email", usuarioGuardado.getCorreoUsu());
+            response.put("password", "123456");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "Error al crear usuario de prueba: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
     // Clases internas para las requests
     public static class LoginRequest {
         private String email;
