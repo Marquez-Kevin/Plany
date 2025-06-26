@@ -115,6 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
             showSection('tasks');
             await fetchAndDisplayTasks();
             await updateWeeklyProgress();
+            await cargarSugerencias(); // <<-- AÑADIDO
             return true;
         } else {
             // No valid session, show login
@@ -894,6 +895,57 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error al cargar tareas de hoy:', e);
             showModalMessage('Error al cargar tareas de hoy: ' + e.message, 'error');
         }
+    }
+
+    /**
+     * Carga y muestra sugerencias de tareas repetitivas
+     */
+    async function cargarSugerencias() {
+        if (!currentUserId) return;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/tareas/sugerencias/repetitivas/${currentUserId}`);
+            if (!response.ok) {
+                throw new Error('No se pudieron cargar las sugerencias.');
+            }
+            const sugerencias = await response.json();
+            
+            if (sugerencias.length > 0) {
+                mostrarSugerencias(sugerencias);
+            }
+
+        } catch (error) {
+            console.error('Error al cargar sugerencias:', error);
+        }
+    }
+
+    /**
+     * Muestra las sugerencias en la UI
+     */
+    function mostrarSugerencias(sugerencias) {
+        const contenedorSugerencias = document.createElement('div');
+        contenedorSugerencias.className = 'sugerencias-card';
+        
+        let htmlSugerencias = '<h3>Sugerencias para ti</h3>';
+        sugerencias.forEach(sug => {
+            htmlSugerencias += `
+                <div class="sugerencia-item">
+                    <p>Hemos notado que creas la tarea "<strong>${sug.tituloSugerido}</strong>" con frecuencia (${sug.frecuenciaDetectada}).</p>
+                    <div class="sugerencia-actions">
+                        <button class="btn-crear-recurrente">Crear recurrente</button>
+                        <button class="btn-descartar">Descartar</button>
+                    </div>
+                </div>
+            `;
+        });
+
+        contenedorSugerencias.innerHTML = htmlSugerencias;
+        
+        // Inserta el contenedor de sugerencias después del header del dashboard
+        const dashboardHeader = document.querySelector('.dashboard-header');
+        dashboardHeader.parentNode.insertBefore(contenedorSugerencias, dashboardHeader.nextSibling);
+
+        // Aquí deberías añadir event listeners para los botones "Crear recurrente" y "Descartar"
     }
 
     // Initialize
