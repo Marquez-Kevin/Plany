@@ -898,4 +898,60 @@ body {
     .task-checkbox {
         margin-right: 12px;
     }
+
+
+    .sugerencias-card {
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.sugerencias-card h3 {
+    color: #4338ca;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.sugerencia-item {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.sugerencia-item p {
+    margin: 0;
+    color: #4a5568;
+    line-height: 1.5;
+}
+
+.sugerencia-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.sugerencia-actions button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.btn-crear-recurrente {
+    background: #667eea;
+    color: white;
+}
+
+.btn-descartar {
+    background: #e2e8f0;
+    color: #4a5568;
+}
+
 }

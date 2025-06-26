@@ -26,6 +26,8 @@ import co.plany.plany.model.Tipo;
 import co.plany.plany.service.TareaService;
 import co.plany.plany.repository.EstadoRepository;
 import co.plany.plany.repository.TipoRepository;
+import co.plany.plany.dto.SugerenciaRepetitivaDTO;
+import co.plany.plany.service.AnalisisTareasService;
 
 @RestController // Indica que esta clase es un controlador REST
 @RequestMapping("/api/tareas") // Ruta base para los endpoints de tareas
@@ -39,6 +41,11 @@ public class TareaController {
 
     @Autowired
     private TipoRepository tipoRepository; // Inyecta el repositorio de tipos
+
+    @Autowired
+    private AnalisisTareasService analisisTareasService; // Inyecta el servicio de análisis de tareas
+
+    
 
     /**
      * @brief Obtiene todos los estados disponibles.
@@ -347,5 +354,17 @@ public class TareaController {
         
         List<Tarea> tareasFiltradas = tareaService.getTareasFiltradas(userId, estado, prioridad, categoria, busqueda, fechaInicio, fechaFin);
         return new ResponseEntity<>(tareasFiltradas, HttpStatus.OK);
+    }
+
+    /**
+     * @brief Obtiene sugerencias de tareas repetitivas para un usuario específico.
+     *
+     * @param userId El ID del usuario.
+     * @return Lista de sugerencias de tareas repetitivas.
+     */
+    @GetMapping("/sugerencias/repetitivas/{userId}")
+    public ResponseEntity<List<SugerenciaRepetitivaDTO>> getSugerenciasRepetitivas(@PathVariable Integer userId) {
+        List<SugerenciaRepetitivaDTO> sugerencias = analisisTareasService.analizarTareasUsuario(userId);
+        return new ResponseEntity<>(sugerencias, HttpStatus.OK);
     }
 }

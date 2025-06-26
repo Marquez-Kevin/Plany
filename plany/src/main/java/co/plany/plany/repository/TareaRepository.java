@@ -40,4 +40,8 @@ public interface TareaRepository extends JpaRepository<Tarea, Integer> {
     List<Tarea> findByUsuarioAndFechaFinBetween(Usuario usuario, LocalDate startDate, LocalDate endDate);
 
     // Puedes añadir más métodos personalizados aquí según tus necesidades
+
+
+     // Nuevo método para encontrar tareas después de una fecha específica
+    List<Tarea> findByUsuarioAndFechaCreacionAfter(Usuario usuario, LocalDate fecha);
 }
